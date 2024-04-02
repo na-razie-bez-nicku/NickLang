@@ -1,0 +1,16 @@
+{
+  "name": "nicklang",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --allowImportingTsExtensions --noEmit main.ts",
+    "buildrun": "tsc --allowImportingTsExtensions --noEmit main.ts && node ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.4.3"
+  }
+}
