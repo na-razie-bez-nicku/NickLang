@@ -52,10 +52,12 @@ const BUILTINCLASSES: Record<string, Class> = {
 export interface Token {
   value: string;
   type: TokenType;
+  ln: number;
+  chr: number;
 }
 
-function token(value = "", type: TokenType) {
-  return { value, type };
+function token(value = "", type: TokenType, ln: number, chr: number) {
+  return { value, type, ln, chr };
 }
 
 function isalpha(src: string) {
@@ -94,17 +96,17 @@ export function tokenize(sourceCode: string): Token[] {
 
   while (src.length > 0) {
     if (src[0] == "(") {
-      tokens.push(token(src.shift(), TokenType.OpenParen));
+      tokens.push(token(src.shift(), TokenType.OpenParen, line, char));
     } else if (src[0] == ")") {
-      tokens.push(token(src.shift(), TokenType.CloseParen));
+      tokens.push(token(src.shift(), TokenType.CloseParen, line, char));
     } else if (src[0] == "{") {
-      tokens.push(token(src.shift(), TokenType.OpenBrace));
+      tokens.push(token(src.shift(), TokenType.OpenBrace, line, char));
     } else if (src[0] == "}") {
-      tokens.push(token(src.shift(), TokenType.CloseBrace));
+      tokens.push(token(src.shift(), TokenType.CloseBrace, line, char));
     } else if (src[0] == "[") {
-      tokens.push(token(src.shift(), TokenType.OpenBracket));
+      tokens.push(token(src.shift(), TokenType.OpenBracket, line, char));
     } else if (src[0] == "]") {
-      tokens.push(token(src.shift(), TokenType.CloseBracket));
+      tokens.push(token(src.shift(), TokenType.CloseBracket, line, char));
     } else if (
       src[0] == "+" ||
       src[0] == "-" ||
@@ -113,24 +115,24 @@ export function tokenize(sourceCode: string): Token[] {
       src[0] == "/" ||
       src[0] == "%"
     ) {
-      tokens.push(token(src.shift(), TokenType.BinaryOperation));
+      tokens.push(token(src.shift(), TokenType.BinaryOperation, line, char));
     } else if (src[0] == "=") {
-      tokens.push(token(src.shift(), TokenType.Equals));
+      tokens.push(token(src.shift(), TokenType.Equals, line, char));
     } else if (src[0] == ";") {
-      tokens.push(token(src.shift(), TokenType.Semicolon));
+      tokens.push(token(src.shift(), TokenType.Semicolon, line, char));
     } else if (src[0] == ":") {
-      tokens.push(token(src.shift(), TokenType.Colon));
+      tokens.push(token(src.shift(), TokenType.Colon, line, char));
     } else if (src[0] == ",") {
-      tokens.push(token(src.shift(), TokenType.Comma));
+      tokens.push(token(src.shift(), TokenType.Comma, line, char));
     } else if (src[0] == ".") {
-      tokens.push(token(src.shift(), TokenType.Dot));
+      tokens.push(token(src.shift(), TokenType.Dot, line, char));
     } else {
       if (isint(src[0])) {
         let int = "";
         while (src.length > 0 && isint(src[0])) {
           int += src.shift();
         }
-        tokens.push(token(int, TokenType.Number));
+        tokens.push(token(int, TokenType.Number, line, char));
       } else if (isalpha(src[0])) {
         /*else if (isnum(src[0], "")) {
                 let num = "";
@@ -151,9 +153,9 @@ export function tokenize(sourceCode: string): Token[] {
 
         const reserved = KEYWORDS[ident];
         if (typeof reserved == "number") {
-          tokens.push(token(ident, reserved));
+          tokens.push(token(ident, reserved, line, char));
         } else {
-          tokens.push(token(ident, TokenType.Identifier));
+          tokens.push(token(ident, TokenType.Identifier, line, char));
         }
       } else if (isskippable(src[0])) {
         if (src[0] == "\n") {
@@ -177,7 +179,7 @@ export function tokenize(sourceCode: string): Token[] {
     char++;
   }
 
-  tokens.push(token("EndOfFile", TokenType.EOF));
+  tokens.push(token("EndOfFile", TokenType.EOF, line, char));
 
   return tokens;
 }
