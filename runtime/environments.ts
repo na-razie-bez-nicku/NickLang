@@ -4,9 +4,9 @@ import { MK_BOOL, MK_NULL, RuntimeVal } from "./values.ts";
 export function createGlobalEnv() {
   const env = new Environment();
 
-  env.declareVar("true", MK_BOOL(true), true, VarType.Boolean);
-  env.declareVar("false", MK_BOOL(false), true, VarType.Boolean);
-  env.declareVar("null", MK_NULL(), true, VarType.String);
+  env.declareVar("true", MK_BOOL(true), true, "Boolean");
+  env.declareVar("false", MK_BOOL(false), true, "Boolean");
+  env.declareVar("null", MK_NULL(), true, "All");
 
   return env;
 }
@@ -14,12 +14,14 @@ export function createGlobalEnv() {
 export default class Environment {
   private parent?: Environment;
   private variables: Map<string, RuntimeVal>;
+  private types: Map<string, VarType>;
   private constants: Set<string>;
 
   constructor(parentENV?: Environment) {
     const global = parentENV ? true : false;
     this.parent = parentENV;
     this.variables = new Map();
+    this.types = new Map();
     this.constants = new Set();
   }
 

@@ -160,16 +160,18 @@ export default class Parser {
 
     switch (type) {
       case "int":
-        var_type = VarType.Integer;
+        var_type = "Integer";
         break;
       case "num":
-        var_type = VarType.Number;
+        var_type = "Number";
         break;
       case "str":
-        var_type = VarType.String;
+        var_type = "String";
         break;
       case "obj":
-        var_type = VarType.Array;
+        var_type = "Object";
+      case "auto":
+        var_type = "Auto";
     }
 
     const declaration = {

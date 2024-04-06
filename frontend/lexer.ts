@@ -37,6 +37,7 @@ const KEYWORDS: Record<string, TokenType> = {
   int: TokenType.Var,
   num: TokenType.Var,
   obj: TokenType.Var,
+  all: TokenType.Var,
   const: TokenType.Const,
 };
 

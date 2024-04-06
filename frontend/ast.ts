@@ -15,14 +15,7 @@ export type NodeType =
   | "Identifier"
   | "BinaryExpr";
 
-export enum VarType {
-  Integer,
-  Number,
-  Boolean,
-  String,
-  Array,
-  Null,
-}
+export type VarType = "Integer" | "Number" | "Boolean" | "String" | "Object" | "All";
 
 export interface Stmt {
   kind: NodeType;

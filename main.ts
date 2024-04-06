@@ -19,10 +19,7 @@ async function run(filename: string) {
 
 function repl() {
   const parser = new Parser();
-  const env = new Environment();
-  env.declareVar("true", MK_BOOL(true), true, VarType.Boolean);
-  env.declareVar("false", MK_BOOL(false), true, VarType.Boolean);
-  env.declareVar("null", MK_NULL(), true, VarType.String);
+  const env = createGlobalEnv();
   console.log("\nRepl v0.1");
 
   while (true) {

@@ -1,3 +1,5 @@
+import { VarType } from "../frontend/ast.ts";
+
 export type ValueType = "null" | "number" | "boolean" | "object";
 
 export interface RuntimeVal {
@@ -34,4 +36,5 @@ export function MK_NUMBER(n: number = 0) {
 export interface ObjectVal extends RuntimeVal {
   type: "object";
   properties: Map<string, RuntimeVal>;
+  var_type: "Object";
 }
