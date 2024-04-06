@@ -1,10 +1,14 @@
 import { VarType } from "../frontend/ast.ts";
 import { MK_BOOL, MK_NULL, RuntimeVal } from "./values.ts";
 
-function setupScope(env: Environment) {
+export function createGlobalEnv() {
+  const env = new Environment();
+
   env.declareVar("true", MK_BOOL(true), true, VarType.Boolean);
   env.declareVar("false", MK_BOOL(false), true, VarType.Boolean);
   env.declareVar("null", MK_NULL(), true, VarType.String);
+
+  return env;
 }
 
 export default class Environment {
@@ -17,8 +21,6 @@ export default class Environment {
     this.parent = parentENV;
     this.variables = new Map();
     this.constants = new Set();
-
-    if (global) setupScope(this);
   }
 
   public declareVar(

@@ -30,3 +30,8 @@ export interface NumberVal extends RuntimeVal {
 export function MK_NUMBER(n: number = 0) {
   return { value: n, type: "number" } as NumberVal;
 }
+
+export interface ObjectVal extends RuntimeVal {
+  type: "object";
+  properties: Map<string, RuntimeVal>;
+}
