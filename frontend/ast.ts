@@ -4,6 +4,11 @@ export type NodeType =
   | "VarDeclaration"
 
   //EXPRESSIONS
+  | "AssignmentExpr"
+
+  //LITERALS
+  | "Property"
+  | "ObjectLiteral"
   | "NumericLiteral"
   | "Identifier"
   | "BinaryExpr";
@@ -13,6 +18,8 @@ export enum VarType {
   Number,
   Boolean,
   String,
+  Array,
+  Null,
 }
 
 export interface Stmt {
@@ -34,6 +41,12 @@ export interface VarDeclaration extends Stmt {
 
 export interface Expr extends Stmt {}
 
+export interface AssignmentExpr extends Expr {
+  kind: "AssignmentExpr";
+  assigne: Expr;
+  value: Expr;
+}
+
 export interface BinaryExpr extends Expr {
   kind: "BinaryExpr";
   left: Expr;
@@ -49,4 +62,15 @@ export interface Identifier extends Expr {
 export interface NumericLiteral extends Expr {
   kind: "NumericLiteral";
   value: number;
+}
+
+export interface Property extends Expr {
+  kind: "Property";
+  key: string;
+  value?: Expr;
+}
+
+export interface ObjectLiteral extends Expr {
+  kind: "ObjectLiteral";
+  properties: Property[];
 }

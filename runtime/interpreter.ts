@@ -1,5 +1,6 @@
 import { NumberVal, RuntimeVal, NullVal, MK_NULL } from "./values.ts";
 import {
+  AssignmentExpr,
   BinaryExpr,
   Identifier,
   NumericLiteral,
@@ -8,8 +9,12 @@ import {
   VarDeclaration,
 } from "../frontend/ast.ts";
 import Environment from "./environments.ts";
-import { eval_binary_expr, eval_identifier } from "./eval/expressions.ts";
-import { eval_program } from "./eval/statements.ts";
+import {
+  eval_assignment,
+  eval_binary_expr,
+  eval_identifier,
+} from "./eval/expressions.ts";
+import { eval_program, eval_var_declaration } from "./eval/statements.ts";
 
 export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
   switch (astNode.kind) {
@@ -18,6 +23,8 @@ export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
         value: (astNode as NumericLiteral).value,
         type: "number",
       } as NumberVal;
+    case "AssignmentExpr":
+      return eval_assignment(astNode as AssignmentExpr, env);
     case "Identifier":
       return eval_identifier(astNode as Identifier, env);
     case "BinaryExpr":
@@ -25,7 +32,7 @@ export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
     case "Program":
       return eval_program(astNode as Program, env);
     case "VarDeclaration":
-      return eval_var_zdeclaration(astNode as VarDeclaration, env);
+      return eval_var_declaration(astNode as VarDeclaration, env);
     default:
       console.error(
         "This AST Node has not yet been setup for interpretation.",
@@ -33,10 +40,4 @@ export function evaluate(astNode: Stmt, env: Environment): RuntimeVal {
       );
       Deno.exit(1);
   }
-}
-function eval_var_declaration(
-  arg0: VarDeclaration,
-  env: Environment
-): RuntimeVal {
-  throw new Error("Function not implemented.");
 }

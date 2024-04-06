@@ -20,13 +20,20 @@ export enum TokenType {
   //Other
   EOF,
   Var,
+
+  //Seperators
   Semicolon,
+  Comma,
+  OpenBrace,
+  CloseBrace,
+  Colon,
 }
 
 const KEYWORDS: Record<string, TokenType> = {
   str: TokenType.Var,
   int: TokenType.Var,
   num: TokenType.Var,
+  obj: TokenType.Var,
   const: TokenType.Const,
 };
 
@@ -87,6 +94,10 @@ export function tokenize(sourceCode: string): Token[] {
       tokens.push(token(src.shift(), TokenType.OpenParen));
     } else if (src[0] == ")") {
       tokens.push(token(src.shift(), TokenType.CloseParen));
+    } else if (src[0] == "{") {
+      tokens.push(token(src.shift(), TokenType.OpenBrace));
+    } else if (src[0] == "}") {
+      tokens.push(token(src.shift(), TokenType.CloseBrace));
     } else if (
       src[0] == "+" ||
       src[0] == "-" ||
@@ -100,6 +111,10 @@ export function tokenize(sourceCode: string): Token[] {
       tokens.push(token(src.shift(), TokenType.Equals));
     } else if (src[0] == ";") {
       tokens.push(token(src.shift(), TokenType.Semicolon));
+    } else if (src[0] == ":") {
+      tokens.push(token(src.shift(), TokenType.Colon));
+    } else if (src[0] == ",") {
+      tokens.push(token(src.shift(), TokenType.Comma));
     } else {
       if (isint(src[0])) {
         let int = "";

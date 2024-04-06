@@ -7,11 +7,14 @@ import {
   Identifier,
   VarDeclaration,
   VarType,
+  AssignmentExpr,
+  Property,
+  ObjectLiteral,
 } from "./ast.ts";
 import { tokenize, Token, TokenType } from "./lexer.ts";
 
 export default class Parser {
-  private tokens: Token[];
+  private tokens: Token[] = [];
 
   private not_eof(): boolean {
     return this.tokens[0].type != TokenType.EOF;
@@ -62,7 +65,56 @@ export default class Parser {
   }
 
   private parse_expr(): Expr {
-    return this.parse_additive_expr();
+    return this.parse_object_expr();
+  }
+
+  private parse_assigment_expr(): Expr {
+    const left = this.parse_object_expr();
+    if (this.at().type == TokenType.Equals) {
+      this.eat();
+      const value = this.parse_assigment_expr();
+      return { value, assigne: left, kind: "AssignmentExpr" } as AssignmentExpr;
+    }
+
+    return left;
+  }
+
+  private parse_object_expr(): Expr {
+    if (this.at().type !== TokenType.OpenBrace) {
+      return this.parse_additive_expr();
+    }
+
+    this.eat();
+    const properties = new Array<Property>();
+    while (this.not_eof() && this.at().type != TokenType.CloseBrace) {
+      const key = this.expect(
+        TokenType.Identifier,
+        "Object literal key expected"
+      ).value;
+      if (this.at().type == TokenType.Comma) {
+        this.eat();
+        properties.push({ key: key, kind: "Property" } as Property);
+        continue;
+      } else if (this.at().type == TokenType.CloseBrace) {
+        properties.push({ key: key, kind: "Property" } as Property);
+        continue;
+      }
+      this.expect(
+        TokenType.Colon,
+        "Missing colon following identifier in ObjectExpr"
+      );
+      this.expect(TokenType.CloseBrace, "Object literal missing closing brace");
+      const value = this.parse_expr();
+
+      properties.push({ kind: "Property", value, key });
+      if (this.at().type != TokenType.CloseBrace) {
+        this.expect(
+          TokenType.Comma,
+          "Expected comma or closing bracket following property"
+        );
+      }
+    }
+    return { kind: "ObjectLiteral", properties } as ObjectLiteral;
   }
 
   private parse_var_declaration(): Stmt {
@@ -112,11 +164,14 @@ export default class Parser {
       case "str":
         var_type = VarType.String;
         break;
+      case "obj":
+        var_type = VarType.Array;
     }
 
     const declaration = {
       kind: "VarDeclaration",
       value: this.parse_expr(),
+      identifier,
       type: var_type,
       constant: isConstant,
     } as VarDeclaration;
@@ -185,6 +240,7 @@ export default class Parser {
         } as NumericLiteral;
       case TokenType.OpenParen:
         this.eat();
+
         const value = this.parse_expr();
         this.expect(
           TokenType.CloseParen,

@@ -1,23 +1,48 @@
-import { RuntimeVal } from "./values.ts";
+import { VarType } from "../frontend/ast.ts";
+import { MK_BOOL, MK_NULL, RuntimeVal } from "./values.ts";
+
+function setupScope(env: Environment) {
+  env.declareVar("true", MK_BOOL(true), true, VarType.Boolean);
+  env.declareVar("false", MK_BOOL(false), true, VarType.Boolean);
+  env.declareVar("null", MK_NULL(), true, VarType.String);
+}
 
 export default class Environment {
-  private parent: Environment;
+  private parent?: Environment;
   private variables: Map<string, RuntimeVal>;
+  private constants: Set<string>;
+
   constructor(parentENV?: Environment) {
+    const global = parentENV ? true : false;
     this.parent = parentENV;
     this.variables = new Map();
+    this.constants = new Set();
+
+    if (global) setupScope(this);
   }
 
-  public declareVar(varname: string, value: RuntimeVal): RuntimeVal {
+  public declareVar(
+    varname: string,
+    value: RuntimeVal,
+    constant: boolean,
+    type: VarType
+  ): RuntimeVal {
     if (this.variables.has(varname)) {
       throw `Cannot declare variable ${varname}. As it already is defined.`;
     }
     this.variables.set(varname, value);
+
+    if (constant) {
+      this.constants.add(varname);
+    }
     return value;
   }
 
   public assignVar(varname: string, value: RuntimeVal): RuntimeVal {
     const env = this.resolve(varname);
+    if (env.constants.has(varname)) {
+      throw `cannot reassign variable ${varname} as it was declared constant.`;
+    }
     env.variables.set(varname, value);
     return value;
   }
