@@ -9,3 +9,8 @@ const obj ArrayOne = {
         },
     },
 };
+
+ArrayOne.omg;
+ArrayOne.omajgot;
+
+ArrayOne.omajgot.OMG.hehe;
