@@ -5,6 +5,7 @@ export enum TokenType {
 
   //Keywords
   Const,
+  Func,
 
   //Identifiers
   Identifier,
@@ -39,6 +40,7 @@ const KEYWORDS: Record<string, TokenType> = {
   obj: TokenType.Var,
   all: TokenType.Var,
   const: TokenType.Const,
+  fun: TokenType.Func,
 };
 
 /*interface Class {

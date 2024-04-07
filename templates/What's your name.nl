@@ -1,4 +1,4 @@
-func Main()
+fun Main()
 {
     Con.Prt("Type your name: ");
     str name = Con.In();

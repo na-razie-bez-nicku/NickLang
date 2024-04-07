@@ -1,4 +1,4 @@
-func Main()
+fun Main()
 {
     Con.Prt("Hello, world!");
 }

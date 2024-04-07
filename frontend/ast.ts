@@ -2,6 +2,7 @@ export type NodeType =
   // STATEMENTS
   | "Program"
   | "VarDeclaration"
+  | "FuncDeclaration"
 
   //EXPRESSIONS
   | "AssignmentExpr"
@@ -15,7 +16,14 @@ export type NodeType =
   | "Identifier"
   | "BinaryExpr";
 
-export type VarType = "Integer" | "Number" | "Boolean" | "String" | "Object" | "All" | "Void";
+export type VarType =
+  | "Integer"
+  | "Number"
+  | "Boolean"
+  | "String"
+  | "Object"
+  | "All"
+  | "Void";
 
 export interface Stmt {
   kind: NodeType;
@@ -32,6 +40,14 @@ export interface VarDeclaration extends Stmt {
   type: VarType;
   identifier: string;
   value?: Expr;
+}
+
+export interface FuncDeclaration extends Stmt {
+  kind: "FuncDeclaration";
+  params: string[];//Map<string, VarType>;
+  return_type: VarType;
+  name: string;
+  body: Stmt[];
 }
 
 export interface Expr extends Stmt {}

@@ -1,4 +1,4 @@
-import { VarType } from "../frontend/ast.ts";
+import { Stmt, VarType } from "../frontend/ast.ts";
 import Environment from "./environments.ts";
 
 export type ValueType =
@@ -7,10 +7,12 @@ export type ValueType =
   | "boolean"
   | "object"
   | "native-func"
-  | "native-class";
+  | "native-class"
+  | "func";
 
 export interface RuntimeVal {
   type: ValueType;
+  return_type: VarType;
 }
 
 export interface NullVal extends RuntimeVal {
@@ -55,6 +57,14 @@ export interface NativeFuncValue extends RuntimeVal {
 
 export function MK_NATIVE_FUNC(call: FunctionCall, parent?: string) {
   return { type: "native-func", call, parent } as NativeFuncValue;
+}
+
+export interface FuncValue extends RuntimeVal {
+  type: "func";
+  name: string;
+  parameters: string[];
+  declarationEnv: Environment;
+  body: Stmt[];
 }
 
 export interface NativeClassValue extends RuntimeVal {
