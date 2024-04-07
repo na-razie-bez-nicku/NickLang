@@ -1,36 +1,38 @@
 export enum TokenType {
   //Types
   Number,
-  String,
+  Text,
 
   //Keywords
-  Const,
-  Func,
+  Const, // const
+  Func, // fun
 
   //Identifiers
   Identifier,
 
   //Operators
-  Equals,
-  BinaryOperation,
+  Equals, // =
+  BinaryOperation, // +, -, *, ^, /, %
 
   //Parens
-  OpenParen,
-  CloseParen,
+  OpenParen, // (
+  CloseParen, // )
 
   //Other
   EOF,
-  Var,
+  Var, // int, num, str, bool
+  Quote, // "
+  Backslash, // \
 
   //Seperators
-  Dot,
-  Semicolon,
-  Comma,
-  OpenBrace,
-  CloseBrace,
-  OpenBracket,
-  CloseBracket,
-  Colon,
+  Dot, // .
+  Semicolon, // ;
+  Comma, // ,
+  OpenBrace, // {
+  CloseBrace, // }
+  OpenBracket, // [
+  CloseBracket, // ]
+  Colon, // :
 }
 
 const KEYWORDS: Record<string, TokenType> = {
@@ -129,6 +131,18 @@ export function tokenize(sourceCode: string): Token[] {
       tokens.push(token(src.shift(), TokenType.Comma, line, char));
     } else if (src[0] == ".") {
       tokens.push(token(src.shift(), TokenType.Dot, line, char));
+    } else if (src[0] == "\\") {
+      tokens.push(token(src.shift(), TokenType.Dot, line, char));
+    } else if (src[0] == '"') {
+      let text = "";
+
+      src.shift();
+      while (src[0] != '"') {
+        text += src.shift();
+      }
+
+      tokens.push(token(text, TokenType.Text, line, char));
+      src.shift();
     } else {
       if (isint(src[0])) {
         let int = "";
