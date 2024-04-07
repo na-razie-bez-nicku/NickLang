@@ -6,6 +6,8 @@ import { evaluate } from "./runtime/interpreter.ts";
 import { MK_NULL, MK_NUMBER, MK_BOOL } from "./runtime/values.ts";
 
 run("./templates/test3.nl");
+//repl();
+
 async function run(filename: string) {
   const parser = new Parser();
   const env = createGlobalEnv();

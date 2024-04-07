@@ -1,5 +1,5 @@
 import { VarType } from "../frontend/ast.ts";
-import { MK_BOOL, MK_NULL, RuntimeVal } from "./values.ts";
+import { MK_BOOL, MK_NATIVE_FUNC, MK_NULL, RuntimeVal } from "./values.ts";
 
 export function createGlobalEnv() {
   const env = new Environment();
@@ -7,6 +7,17 @@ export function createGlobalEnv() {
   env.declareVar("true", MK_BOOL(true), true, "Boolean");
   env.declareVar("false", MK_BOOL(false), true, "Boolean");
   env.declareVar("null", MK_NULL(), true, "All");
+
+  // Define a native built-in method
+  env.declareVar(
+    "print",
+    MK_NATIVE_FUNC((args, scope) => {
+      console.log(...args);
+      return MK_NULL();
+    }),
+    true,
+    "Void"
+  );
 
   return env;
 }

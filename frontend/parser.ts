@@ -277,8 +277,12 @@ export default class Parser {
   private parse_member_expr(): Expr {
     let object = this.parse_primary_expr();
 
-    while (this.at().type == TokenType.Comma && this.eat()) {
+    while (
+      this.at().type == TokenType.Dot ||
+      this.at().type == TokenType.OpenBracket
+    ) {
       const operator = this.eat();
+
       let property: Expr;
       let computed: boolean;
 
@@ -292,11 +296,13 @@ export default class Parser {
       } else {
         computed = true;
         property = this.parse_expr();
+
         this.expect(
           TokenType.CloseBracket,
           "Missing closing bracket in computed value"
         );
       }
+
       object = {
         kind: "MemberExpr",
         object,

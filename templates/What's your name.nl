@@ -1,5 +1,6 @@
 func Main()
 {
-    Con.Prt("Type your name: ")
-    Con.Prt($"Hello ${Con.In()}!\n");
+    Con.Prt("Type your name: ");
+    str name = Con.In();
+    Con.Prt("\nHello " + name + "!\n");
 }
