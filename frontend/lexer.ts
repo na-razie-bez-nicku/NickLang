@@ -41,6 +41,7 @@ const KEYWORDS: Record<string, TokenType> = {
   num: TokenType.Var,
   obj: TokenType.Var,
   all: TokenType.Var,
+  bool: TokenType.Var,
   const: TokenType.Const,
   fun: TokenType.Func,
 };
@@ -139,6 +140,9 @@ export function tokenize(sourceCode: string): Token[] {
       src.shift();
       while (src[0] != '"') {
         text += src.shift();
+        if (2 > src.length) {
+          throw "";
+        }
       }
 
       tokens.push(token(text, TokenType.Text, line, char));

@@ -5,7 +5,14 @@ import Environment, { createGlobalEnv } from "./runtime/environments.ts";
 import { evaluate } from "./runtime/interpreter.ts";
 import { MK_NULL, MK_NUMBER, MK_BOOL } from "./runtime/values.ts";
 
-run("./templates/test3.nl");
+/*if (Deno.args.length > 1) {
+  let args: string[] = Deno.args;
+  
+}*/
+const filename = prompt("Script Path:");
+
+if(filename)
+  run(filename);
 //repl();
 
 async function run(filename: string) {

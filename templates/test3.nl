@@ -1,7 +1,10 @@
-fun main(args){
-    const int test = "Test";
-    const int bruh = 1200 * 13212 ^ test;
-    print(bruh)
+fun main(args)
+{
+    print(null)
+    print(true)
+    print(false)
+    print(100)
+    print({ nameA: 100, nameB: true, nameC: false, nameD: null, nameE: { nameA: 121390}})
 }
 
 main()

@@ -1,5 +1,42 @@
 import { VarType } from "../frontend/ast.ts";
-import { MK_BOOL, MK_NATIVE_FUNC, MK_NULL, RuntimeVal } from "./values.ts";
+import {
+  BooleanVal,
+  MK_BOOL,
+  MK_NATIVE_FUNC,
+  MK_NULL,
+  NullVal,
+  NumberVal,
+  ObjectVal,
+  RuntimeVal,
+} from "./values.ts";
+
+function get_args(arg: RuntimeVal): string {
+  const farg = arg as NumberVal | BooleanVal | NullVal | ObjectVal;
+  let text = "";
+  if (farg.type == "object") {
+    text += "{ ";
+    let i = 0;
+    for (const prop of farg.properties) {
+      i++;
+      if (prop[1].type == "object") {
+        text += prop[0] + ": ";
+        text += get_args(prop[1]);
+      } else {
+        //, prop[1], prevProp?: RuntimeVal
+        text += `${prop[0]}: ${
+          (prop[1] as NumberVal | BooleanVal | NullVal).value
+        }`;
+      }
+      if (farg.properties.size != i) {
+        text += ", ";
+      }
+    }
+    text += " }";
+  } else {
+    text = (arg as NumberVal | BooleanVal | NullVal).value;
+  }
+  return text;
+}
 
 export function createGlobalEnv() {
   const env = new Environment();
@@ -12,7 +49,10 @@ export function createGlobalEnv() {
   env.declareVar(
     "print",
     MK_NATIVE_FUNC((args, scope) => {
-      console.log(...args);
+      for (const arg of args) {
+        console.log(get_args(arg));
+        //console.log(().value);
+      }
       return MK_NULL();
     }),
     true,

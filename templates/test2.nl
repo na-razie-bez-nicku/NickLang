@@ -1,4 +1,6 @@
-num radius = 1
-num pi = 3
+num radius = 12;
+num pi = 3;
 
-num = pi * ( radius * radius )
+num result = pi * ( radius ^ 2 );
+
+print(result)
