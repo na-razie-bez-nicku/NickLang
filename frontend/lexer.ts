@@ -46,15 +46,6 @@ const KEYWORDS: Record<string, TokenType> = {
   fun: TokenType.Func,
 };
 
-/*interface Class {
-    members: Array<any> | null,
-}
-
-const BUILTINCLASSES: Record<string, Class> = {
-    "Con": { members: null },
-    
-}*/
-
 export interface Token {
   value: string;
   type: TokenType;
