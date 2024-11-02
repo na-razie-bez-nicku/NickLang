@@ -13,6 +13,7 @@ import {
   CallExpr,
   MemberExpr,
   FuncDeclaration,
+  StringLiteral,
 } from "./ast.ts";
 import { tokenize, Token, TokenType } from "./lexer.ts";
 
@@ -177,16 +178,12 @@ export default class Parser {
 
     if (isConstant) {
       this.eat();
-      type = this.expect(
-        TokenType.Var,
-        "Expected variable type after const keyword."
-      ).value;
       identifier = this.expect(
         TokenType.Identifier,
         "Expected identifier name."
       ).value;
     } else {
-      type = this.expect(TokenType.Var, "Expected variable type.").value;
+      type = this.expect(TokenType.Var, "Expected 'var' keyword.").value;
       identifier = this.expect(
         TokenType.Identifier,
         "Expected identifier name."
@@ -206,21 +203,21 @@ export default class Parser {
     this.expect(TokenType.Equals, "Expected equals token following identifier");
     let var_type;
 
-    switch (type) {
-      case "int":
-        var_type = "Integer";
-        break;
-      case "num":
-        var_type = "Number";
-        break;
-      case "str":
-        var_type = "String";
-        break;
-      case "obj":
-        var_type = "Object";
-      case "auto":
-        var_type = "Auto";
-    }
+    // switch (type) {
+    //   case "int":
+    //     var_type = "Integer";
+    //     break;
+    //   case "num":
+    //     var_type = "Number";
+    //     break;
+    //   case "str":
+    //     var_type = "String";
+    //     break;
+    //   case "obj":
+    //     var_type = "Object";
+    //   case "any":
+    //     var_type = "Any";
+    // }
 
     const declaration = {
       kind: "VarDeclaration",
@@ -376,6 +373,11 @@ export default class Parser {
           kind: "NumericLiteral",
           value: parseFloat(this.eat().value),
         } as NumericLiteral;
+      case TokenType.Text:
+        return {
+          kind: "StringLiteral",
+          value: this.eat().value,
+        } as StringLiteral;
       case TokenType.OpenParen:
         this.eat();
 

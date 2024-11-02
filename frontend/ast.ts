@@ -13,6 +13,7 @@ export type NodeType =
   | "Property"
   | "ObjectLiteral"
   | "NumericLiteral"
+  | "StringLiteral"
   | "Identifier"
   | "BinaryExpr";
 
@@ -22,8 +23,9 @@ export type VarType =
   | "Boolean"
   | "String"
   | "Object"
-  | "All"
-  | "Void";
+  | "Any"
+  | "Void"
+  | "Custom";
 
 export interface Stmt {
   kind: NodeType;
@@ -44,7 +46,7 @@ export interface VarDeclaration extends Stmt {
 
 export interface FuncDeclaration extends Stmt {
   kind: "FuncDeclaration";
-  params: string[];//Map<string, VarType>;
+  params: string[]; //Map<string, VarType>;
   return_type: VarType;
   name: string;
   body: Stmt[];
@@ -86,6 +88,11 @@ export interface Identifier extends Expr {
 export interface NumericLiteral extends Expr {
   kind: "NumericLiteral";
   value: number;
+}
+
+export interface StringLiteral extends Expr {
+  kind: "StringLiteral";
+  value: string;
 }
 
 export interface Property extends Expr {

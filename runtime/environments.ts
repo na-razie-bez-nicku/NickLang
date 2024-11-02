@@ -1,17 +1,22 @@
 import { VarType } from "../frontend/ast.ts";
+import { version } from "../main.ts";
 import {
   BooleanVal,
   MK_BOOL,
+  MK_NATIVE_CLASS,
   MK_NATIVE_FUNC,
   MK_NULL,
+  MK_NUMBER,
+  MK_STRING,
   NullVal,
   NumberVal,
   ObjectVal,
   RuntimeVal,
+  StringVal,
 } from "./values.ts";
 
 function get_args(arg: RuntimeVal): string {
-  const farg = arg as NumberVal | BooleanVal | NullVal | ObjectVal;
+  const farg = arg as NumberVal | BooleanVal | NullVal | StringVal | ObjectVal;
   let text = "";
   if (farg.type == "object") {
     text += "{ ";
@@ -33,7 +38,7 @@ function get_args(arg: RuntimeVal): string {
     }
     text += " }";
   } else {
-    text = (arg as NumberVal | BooleanVal | NullVal).value;
+    text = (arg as NumberVal | BooleanVal | NullVal | StringVal).value;
   }
   return text;
 }
@@ -43,20 +48,40 @@ export function createGlobalEnv() {
 
   env.declareVar("true", MK_BOOL(true), true, "Boolean");
   env.declareVar("false", MK_BOOL(false), true, "Boolean");
-  env.declareVar("null", MK_NULL(), true, "All");
+  env.declareVar("null", MK_NULL(), true, "Any");
+
+  env.declareVar("_version", MK_STRING(version), true, "String");
+
+  const mathClass = env.declareVar("Math", MK_NATIVE_CLASS(), true, "Void")
+
+  env.declareVar("Pi", MK_NUMBER(Math.PI, mathClass), true, "Number");
 
   // Define a native built-in method
   env.declareVar(
     "print",
     MK_NATIVE_FUNC((args, scope) => {
+      var text = "";
       for (const arg of args) {
-        console.log(get_args(arg));
+        text += get_args(arg);
         //console.log(().value);
       }
+      console.log(text);
       return MK_NULL();
     }),
     true,
     "Void"
+  );
+
+  env.declareVar(
+    "input",
+    MK_NATIVE_FUNC((args, scope) => {
+      const arg = args.length > 0 ? get_args(args[0]) : "";
+      const value = prompt(arg);
+      console.log(typeof(MK_STRING(value as string)));
+      return MK_STRING(value as string);
+    }),
+    true,
+    "String"
   );
 
   return env;

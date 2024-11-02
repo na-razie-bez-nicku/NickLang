@@ -1,6 +1,7 @@
-num radius = 12;
-num pi = 3;
+var radius = 12;
 
-num result = pi * ( radius ^ 2 );
+var result = Pi * ( radius ^ 2 );
 
 print(result)
+
+print(Math.Pi)

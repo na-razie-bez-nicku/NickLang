@@ -3,12 +3,14 @@ import {
   BinaryExpr,
   CallExpr,
   Identifier,
+  MemberExpr,
   ObjectLiteral,
 } from "../../frontend/ast.ts";
 import Environment from "../environments.ts";
 import { evaluate } from "../interpreter.ts";
 import {
   FuncValue,
+  MemberVal,
   MK_NULL,
   NativeFuncValue,
   NumberVal,
@@ -84,6 +86,12 @@ export function eval_object_expr(obj: ObjectLiteral, env): RuntimeVal {
   return object;
 }
 
+export function eval_member_expr(expr: MemberExpr, env): RuntimeVal {
+  const member = evaluate(expr.property, env) as MemberVal;
+  (expr.object as ObjectLiteral).properties
+  return member;
+}
+
 export function eval_call_expr(expr: CallExpr, env: Environment): RuntimeVal {
   const args = expr.args.map((arg) => evaluate(arg, env));
   const func = evaluate(expr.caller, env);
@@ -101,7 +109,7 @@ export function eval_call_expr(expr: CallExpr, env: Environment): RuntimeVal {
     for (let i = 0; i < fun.parameters.length; i++) {
       const varname = fun.parameters[i];
 
-      scope.declareVar(varname, args[i], false, "All");
+      scope.declareVar(varname, args[i], false, "Any");
     }
 
     let result: RuntimeVal = MK_NULL();

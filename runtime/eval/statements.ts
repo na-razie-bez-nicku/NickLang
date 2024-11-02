@@ -40,7 +40,7 @@ export function eval_func_declaration(
     type: "func",
     name: declaration.name,
     parameters: declaration.params,
-    return_type: "All",
+    return_type: "Any",
     declarationEnv: env,
     body: declaration.body,
   } as FuncValue;

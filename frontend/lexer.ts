@@ -6,6 +6,7 @@ export enum TokenType {
   //Keywords
   Const, // const
   Func, // fun
+  Var, // var
 
   //Identifiers
   Identifier,
@@ -20,7 +21,7 @@ export enum TokenType {
 
   //Other
   EOF,
-  Var, // int, num, str, bool
+  Type, // int, num, str, bool
   Quote, // "
   Backslash, // \
 
@@ -36,13 +37,14 @@ export enum TokenType {
 }
 
 const KEYWORDS: Record<string, TokenType> = {
-  str: TokenType.Var,
-  int: TokenType.Var,
-  num: TokenType.Var,
-  obj: TokenType.Var,
-  all: TokenType.Var,
-  bool: TokenType.Var,
+  str: TokenType.Type,
+  int: TokenType.Type,
+  num: TokenType.Type,
+  obj: TokenType.Type,
+  all: TokenType.Type,
+  bool: TokenType.Type,
   const: TokenType.Const,
+  var: TokenType.Var,
   fun: TokenType.Func,
 };
 
@@ -145,7 +147,7 @@ export function tokenize(sourceCode: string): Token[] {
           int += src.shift();
         }
         tokens.push(token(int, TokenType.Number, line, char));
-      } else if (isalpha(src[0])) {
+      } else if (isalpha(src[0]) || src[0] == "_") {
         /*else if (isnum(src[0], "")) {
                 let num = "";
                 while (src.length > 0 && isnum(src[0], num)) {
@@ -159,7 +161,7 @@ export function tokenize(sourceCode: string): Token[] {
                 tokens.push(token(num, TokenType.Number));
             }*/
         let ident = "";
-        while (src.length > 0 && isalpha(src[0])) {
+        while (src.length > 0 && (isalpha(src[0]) || isint(src[0]) || src[0] == "_")) {
           ident += src.shift();
         }
 
