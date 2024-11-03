@@ -50,6 +50,7 @@ export interface FuncDeclaration extends Stmt {
   return_type: VarType;
   name: string;
   body: Stmt[];
+  return?: Expr;
 }
 
 export interface Expr extends Stmt {}

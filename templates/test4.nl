@@ -1,10 +1,11 @@
-fun git(){
-    print("gites")
+fun git(name){
+    Con.Prt("gites " + name)
 }
 
 var test = {
     text: "omg", func: git
 };
 
-print(test.text)
-test.func()
+Con.Prt(test.text)
+test.func(Con.In("Podaj swoje imię:"))
+test["func"]("test")

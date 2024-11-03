@@ -52,13 +52,28 @@ export function createGlobalEnv() {
 
   env.declareVar("_version", MK_STRING(version), true, "String");
 
-  const mathClass = env.declareVar("Math", MK_NATIVE_CLASS(), true, "Void")
+  //const mathClass = env.declareVar("Math", MK_NATIVE_CLASS(), true, "Void")
 
-  env.declareVar("Pi", MK_NUMBER(Math.PI, mathClass), true, "Number");
+  const MathObject = env.declareVar(
+    "Math",
+    { type: "object", properties: new Map() } as ObjectVal,
+    true,
+    "Object"
+  ) as ObjectVal;
 
-  // Define a native built-in method
-  env.declareVar(
-    "print",
+  MathObject.properties.set("Pi", MK_NUMBER(Math.PI));
+
+  //env.declareVar("Pi", MK_NUMBER(Math.PI), true, "Number");
+
+  const ConObject = env.declareVar(
+    "Con",
+    { type: "object", properties: new Map() } as ObjectVal,
+    true,
+    "Object"
+  ) as ObjectVal;
+
+  ConObject.properties.set(
+    "Prt",
     MK_NATIVE_FUNC((args, scope) => {
       var text = "";
       for (const arg of args) {
@@ -67,22 +82,46 @@ export function createGlobalEnv() {
       }
       console.log(text);
       return MK_NULL();
-    }),
-    true,
-    "Void"
+    })
   );
 
-  env.declareVar(
-    "input",
+  ConObject.properties.set(
+    "In",
     MK_NATIVE_FUNC((args, scope) => {
       const arg = args.length > 0 ? get_args(args[0]) : "";
       const value = prompt(arg);
-      console.log(typeof(MK_STRING(value as string)));
+
       return MK_STRING(value as string);
-    }),
-    true,
-    "String"
+    })
   );
+
+  // Define a native built-in method
+  // env.declareVar(
+  //   "print",
+  //   MK_NATIVE_FUNC((args, scope) => {
+  //     var text = "";
+  //     for (const arg of args) {
+  //       text += get_args(arg);
+  //       //console.log(().value);
+  //     }
+  //     console.log(text);
+  //     return MK_NULL();
+  //   }),
+  //   true,
+  //   "Void"
+  // );
+
+  // env.declareVar(
+  //   "input",
+  //   MK_NATIVE_FUNC((args, scope) => {
+  //     const arg = args.length > 0 ? get_args(args[0]) : "";
+  //     const value = prompt(arg);
+
+  //     return MK_STRING(value as string);
+  //   }),
+  //   true,
+  //   "String"
+  // );
 
   return env;
 }

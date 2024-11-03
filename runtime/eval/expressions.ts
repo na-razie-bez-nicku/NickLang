@@ -12,11 +12,14 @@ import { evaluate } from "../interpreter.ts";
 import {
   FuncValue,
   MemberVal,
+  MK_BOOL,
   MK_NULL,
+  MK_STRING,
   NativeFuncValue,
   NumberVal,
   ObjectVal,
   RuntimeVal,
+  StringVal,
 } from "../values.ts";
 
 export function eval_numeric_binary_expr(
@@ -53,6 +56,8 @@ export function eval_binary_expr(
       rhs as NumberVal,
       binop.operator
     );
+  } else if (lhs.type == "string" || rhs.type == "string") {
+    return MK_STRING((lhs as StringVal).value + (rhs as StringVal).value);
   }
   return MK_NULL();
 }
@@ -88,17 +93,19 @@ export function eval_object_expr(obj: ObjectLiteral, env): RuntimeVal {
 }
 
 export function eval_member_expr(expr: MemberExpr, env): RuntimeVal {
-  const member = evaluate(expr.property, env) as MemberVal;
-  const object = expr.object as ObjectLiteral;
-  member.identifier = (expr.property as Property).key;
-  for(const { key, value } of object.properties){
-    if(key == (expr.property as Property).key){
-      member.value = evaluate(value!, env);
+  const member = evaluate(expr.object, env) as MemberVal;
+  const object = evaluate(expr.object as Identifier, env) as ObjectVal;
+
+  member.identifier = (expr.property as Identifier).symbol;
+
+  for (const property of object.properties) {
+    if (property[0] == member.identifier) {
+      member.value = property[1];
       break;
     }
   }
-  //object.properties.set(member.identifier, member.value);
-  return member;
+
+  return member.value;
 }
 
 export function eval_call_expr(expr: CallExpr, env: Environment): RuntimeVal {

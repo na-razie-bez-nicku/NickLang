@@ -1,0 +1,1 @@
+Con.Prt(Con.In("OMG") + " OMG")

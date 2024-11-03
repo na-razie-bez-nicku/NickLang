@@ -65,10 +65,13 @@ export default class Parser {
         return this.parse_var_declaration();
       case TokenType.Func:
         return this.parse_func_declaration();
+      // case TokenType.Return:
+      //   return this.parse_return();
       default:
         return this.parse_expr();
     }
   }
+  //parse_return(): Stmt {}
   private parse_func_declaration(): Stmt {
     this.eat();
     const name = this.expect(
@@ -96,9 +99,25 @@ export default class Parser {
 
     while (
       this.at().type !== TokenType.EOF &&
-      this.at().type !== TokenType.CloseBrace
+      this.at().type !== TokenType.CloseBrace &&
+      this.at().type !== TokenType.Return
     ) {
       body.push(this.parse_stmt());
+    }
+
+    if (this.at().type === TokenType.Return) {
+      this.eat();
+      const retExpr = this.parse_stmt();
+
+      const fn = {
+        body,
+        name,
+        params,
+        kind: "FuncDeclaration",
+        return: retExpr,
+      } as FuncDeclaration;
+
+      return fn;
     }
     this.expect(
       TokenType.CloseBrace,

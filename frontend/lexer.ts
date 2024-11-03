@@ -7,6 +7,7 @@ export enum TokenType {
   Const, // const
   Func, // fun
   Var, // var
+  Return, // return
 
   //Identifiers
   Identifier,
@@ -46,6 +47,7 @@ const KEYWORDS: Record<string, TokenType> = {
   const: TokenType.Const,
   var: TokenType.Var,
   fun: TokenType.Func,
+  return: TokenType.Return
 };
 
 export interface Token {
@@ -161,7 +163,10 @@ export function tokenize(sourceCode: string): Token[] {
                 tokens.push(token(num, TokenType.Number));
             }*/
         let ident = "";
-        while (src.length > 0 && (isalpha(src[0]) || isint(src[0]) || src[0] == "_")) {
+        while (
+          src.length > 0 &&
+          (isalpha(src[0]) || isint(src[0]) || src[0] == "_")
+        ) {
           ident += src.shift();
         }
 
