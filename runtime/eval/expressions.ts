@@ -5,6 +5,7 @@ import {
   Identifier,
   MemberExpr,
   ObjectLiteral,
+  Property,
 } from "../../frontend/ast.ts";
 import Environment from "../environments.ts";
 import { evaluate } from "../interpreter.ts";
@@ -88,7 +89,15 @@ export function eval_object_expr(obj: ObjectLiteral, env): RuntimeVal {
 
 export function eval_member_expr(expr: MemberExpr, env): RuntimeVal {
   const member = evaluate(expr.property, env) as MemberVal;
-  (expr.object as ObjectLiteral).properties
+  const object = expr.object as ObjectLiteral;
+  member.identifier = (expr.property as Property).key;
+  for(const { key, value } of object.properties){
+    if(key == (expr.property as Property).key){
+      member.value = evaluate(value!, env);
+      break;
+    }
+  }
+  //object.properties.set(member.identifier, member.value);
   return member;
 }
 

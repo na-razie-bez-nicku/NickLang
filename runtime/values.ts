@@ -62,7 +62,7 @@ export interface ObjectVal extends RuntimeVal {
 
 export interface MemberVal extends RuntimeVal {
   type: "member";
-  identifier: RuntimeVal;
+  identifier: string;
   value: RuntimeVal;
   var_type: "Any";
 }
