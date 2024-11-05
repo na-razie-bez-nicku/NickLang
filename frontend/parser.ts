@@ -107,7 +107,7 @@ export default class Parser {
 
     if (this.at().type === TokenType.Return) {
       this.eat();
-      const retExpr = this.parse_stmt();
+      const retExpr = this.parse_expr();
 
       const fn = {
         body,
@@ -132,6 +132,11 @@ export default class Parser {
     } as FuncDeclaration;
 
     return fn;
+  }
+  parse_return_expr(): Expr {
+    while (this.at().type !== TokenType.Semicolon) {
+
+    }
   }
 
   private parse_expr(): Expr {
