@@ -1,6 +1,7 @@
 fun Main()
 {
-    Con.Prt("Type your name: ");
-    str name = Con.In();
-    Con.Prt("\nHello " + name + "!\n");
+    var name = Con.In("Type your name:");
+    Con.Prt("Hello " + name + "!")
 }
+
+Main()

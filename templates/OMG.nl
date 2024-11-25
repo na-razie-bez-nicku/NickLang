@@ -1,1 +1,5 @@
-Con.Prt(Con.In("OMG") + " OMG")
+fun Test(){
+    return "Elo" + " " + "Mordko"
+}
+
+Test()

@@ -14,6 +14,7 @@ import {
   MemberExpr,
   FuncDeclaration,
   StringLiteral,
+  ReturnExpr,
 } from "./ast.ts";
 import { tokenize, Token, TokenType } from "./lexer.ts";
 
@@ -65,8 +66,8 @@ export default class Parser {
         return this.parse_var_declaration();
       case TokenType.Func:
         return this.parse_func_declaration();
-      // case TokenType.Return:
-      //   return this.parse_return();
+      case TokenType.Return:
+        return this.parse_return_expr();
       default:
         return this.parse_expr();
     }
@@ -99,26 +100,26 @@ export default class Parser {
 
     while (
       this.at().type !== TokenType.EOF &&
-      this.at().type !== TokenType.CloseBrace &&
-      this.at().type !== TokenType.Return
+      this.at().type !== TokenType.CloseBrace // &&
+      // this.at().type !== TokenType.Return
     ) {
       body.push(this.parse_stmt());
     }
 
-    if (this.at().type === TokenType.Return) {
-      this.eat();
-      const retExpr = this.parse_expr();
+    // if (this.at().type === TokenType.Return) {
+    //   this.eat();
+    //   const retExpr = this.parse_expr();
 
-      const fn = {
-        body,
-        name,
-        params,
-        kind: "FuncDeclaration",
-        return: retExpr,
-      } as FuncDeclaration;
+    //   const fn = {
+    //     body,
+    //     name,
+    //     params,
+    //     kind: "FuncDeclaration",
+    //     return: retExpr,
+    //   } as FuncDeclaration;
 
-      return fn;
-    }
+    //   return fn;
+    // }
     this.expect(
       TokenType.CloseBrace,
       "Closing brace expected inside function declaration."
@@ -134,9 +135,8 @@ export default class Parser {
     return fn;
   }
   parse_return_expr(): Expr {
-    while (this.at().type !== TokenType.Semicolon) {
-
-    }
+    this.eat();
+    return { kind: "ReturnExpr", return_expr: this.parse_stmt() } as ReturnExpr;
   }
 
   private parse_expr(): Expr {

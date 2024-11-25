@@ -8,6 +8,7 @@ export enum TokenType {
   Func, // fun
   Var, // var
   Return, // return
+  If, // if
 
   //Identifiers
   Identifier,
@@ -47,7 +48,8 @@ const KEYWORDS: Record<string, TokenType> = {
   const: TokenType.Const,
   var: TokenType.Var,
   fun: TokenType.Func,
-  return: TokenType.Return
+  return: TokenType.Return,
+  if: TokenType.If,
 };
 
 export interface Token {

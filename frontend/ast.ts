@@ -8,6 +8,7 @@ export type NodeType =
   | "AssignmentExpr"
   | "MemberExpr"
   | "CallExpr"
+  | "ReturnExpr"
 
   //LITERALS
   | "Property"
@@ -50,10 +51,15 @@ export interface FuncDeclaration extends Stmt {
   return_type: VarType;
   name: string;
   body: Stmt[];
-  return?: Expr;
+  //return?: Expr;
 }
 
 export interface Expr extends Stmt {}
+
+export interface ReturnExpr extends Expr {
+  kind: "ReturnExpr";
+  return_expr: Expr;
+}
 
 export interface AssignmentExpr extends Expr {
   kind: "AssignmentExpr";
